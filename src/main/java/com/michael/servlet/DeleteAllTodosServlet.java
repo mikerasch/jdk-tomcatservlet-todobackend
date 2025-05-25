@@ -1,0 +1,20 @@
+package com.michael.servlet;
+
+import com.michael.http.HttpMethod;
+import com.michael.servlet.router.Route;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.regex.Pattern;
+
+public class DeleteAllTodosServlet extends TomcatServlet {
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+
+    }
+
+    @Override
+    public Route getRoute() {
+        return new Route(HttpMethod.DELETE, Pattern.compile("^/$"), this::doDelete);
+    }
+}
