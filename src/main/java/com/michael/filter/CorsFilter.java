@@ -1,6 +1,7 @@
 package com.michael.filter;
 
 import com.michael.http.HttpMethod;
+import com.michael.http.HttpStatus;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,6 +25,7 @@ public class CorsFilter implements Filter {
             response.setHeader("access-control-allow-methods", "*");
             response.setHeader("access-control-allow-headers", "*");
             response.setHeader("access-control-max-age", "86400");
+            response.setStatus(HttpStatus.OK.getCode());
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }
