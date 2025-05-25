@@ -1,6 +1,13 @@
 package com.michael;
 
 import com.michael.filter.CorsFilter;
+import com.michael.servlet.DeleteAllTodosServlet;
+import com.michael.servlet.DeleteTodoServlet;
+import com.michael.servlet.GetAllTodosServlet;
+import com.michael.servlet.GetTodoServlet;
+import com.michael.servlet.PatchTodoServlet;
+import com.michael.servlet.PostTodoServlet;
+import com.michael.servlet.TomcatServlet;
 import com.michael.servlet.router.RouterServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
@@ -25,7 +32,15 @@ public class App {
     }
 
     private static void addServlets(Context ctx) {
-        RouterServlet routerServlet = new RouterServlet(Set.of());
+        Set<TomcatServlet> tomcatServlets = Set.of(
+           new DeleteAllTodosServlet(),
+           new DeleteTodoServlet(),
+           new GetAllTodosServlet(),
+           new GetTodoServlet(),
+           new PatchTodoServlet(),
+           new PostTodoServlet()
+        );
+        RouterServlet routerServlet = new RouterServlet(tomcatServlets);
         Tomcat.addServlet(ctx, "routerServlet", routerServlet);
     }
 
