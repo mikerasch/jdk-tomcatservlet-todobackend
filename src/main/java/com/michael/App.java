@@ -1,5 +1,7 @@
 package com.michael;
 
+import com.michael.database.Database;
+import com.michael.database.Scripts;
 import com.michael.filter.CorsFilter;
 import com.michael.servlet.DeleteAllTodosServlet;
 import com.michael.servlet.DeleteTodoServlet;
@@ -15,10 +17,13 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
 
+import java.sql.SQLException;
 import java.util.Set;
 
 public class App {
-    public static void main(String[] args) throws LifecycleException {
+    public static void main(String[] args) throws Exception {
+        Database database = new Database();
+        Scripts.init(database);
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(8080);
         tomcat.setBaseDir("temp");
