@@ -1,12 +1,15 @@
 package com.michael.servlet;
 
 import com.michael.database.Database;
+import com.michael.database.entities.TodoEntity;
 import com.michael.exceptions.UncheckedSqlException;
 import com.michael.http.HttpMethod;
 import com.michael.http.HttpStatus;
 import com.michael.models.TodoRequest;
+import com.michael.models.TodoResponse;
 import com.michael.provider.GSONProvider;
 import com.michael.servlet.router.Route;
+import com.michael.servlet.utils.ResponseCreator;
 import com.michael.validators.TodoValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,8 +47,8 @@ public class PostTodoServlet extends TomcatServlet {
       preparedStatement.setString(1, todoRequest.title());
       preparedStatement.setBoolean(2, Optional.ofNullable(todoRequest.completed()).orElse(false));
       preparedStatement.setInt(3, Optional.ofNullable(todoRequest.order()).orElse(0));
-      preparedStatement.execute();
-      resp.setStatus(HttpStatus.CREATED.getCode());
+      TodoEntity entity = new TodoEntity(preparedStatement.executeQuery());
+      ResponseCreator.writeJsonContent(new TodoResponse(entity, req), resp, HttpStatus.CREATED);
     } catch (SQLException e) {
       throw new UncheckedSqlException(e);
     }
