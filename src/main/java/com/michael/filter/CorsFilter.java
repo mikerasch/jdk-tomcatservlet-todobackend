@@ -22,7 +22,7 @@ public class CorsFilter implements Filter {
 
     HttpMethod method = HttpMethod.valueOf(request.getMethod());
 
-    if (method == HttpMethod.OPTION) {
+    if (method == HttpMethod.OPTIONS) {
       response.setHeader("access-control-allow-methods", "*");
       response.setHeader("access-control-allow-headers", "*");
       response.setHeader("access-control-max-age", "86400");
