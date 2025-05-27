@@ -30,7 +30,7 @@ public class GetAllTodosServlet extends TomcatServlet {
       PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM todo");
       List<TodoResponse> todoResponses =
           mapFromResultSet(preparedStatement.executeQuery()).stream()
-              .map(TodoResponse::new)
+              .map(entity -> new TodoResponse(entity, req))
               .toList();
       ResponseCreator.writeJsonContent(todoResponses, resp, HttpStatus.OK);
     } catch (SQLException e) {

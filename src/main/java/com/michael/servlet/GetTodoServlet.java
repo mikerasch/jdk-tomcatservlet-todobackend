@@ -33,7 +33,7 @@ public class GetTodoServlet extends TomcatServlet {
       PreparedStatement statement = con.prepareStatement("SELECT * FROM todo WHERE id = ?");
       statement.setInt(1, id);
       TodoResponse todoResponse =
-          mapFromResultSet(statement.executeQuery()).map(TodoResponse::new).orElse(null);
+          mapFromResultSet(statement.executeQuery()).map(entity -> new TodoResponse(entity, req)).orElse(null);
       if (todoResponse == null) {
         resp.sendError(HttpStatus.NOT_FOUND.getCode(), "Record not found.");
         return;

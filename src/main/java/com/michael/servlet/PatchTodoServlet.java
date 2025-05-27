@@ -60,7 +60,7 @@ public class PatchTodoServlet extends TomcatServlet {
       updateStatement.setInt(3, todoEntity.getOrder());
       updateStatement.setInt(4, id);
       updateStatement.execute();
-      TodoResponse todoResponse = new TodoResponse(todoEntity);
+      TodoResponse todoResponse = new TodoResponse(todoEntity, req);
       ResponseCreator.writeJsonContent(todoResponse, resp, HttpStatus.OK);
     } catch (SQLException e) {
       throw new UncheckedSqlException(e);
