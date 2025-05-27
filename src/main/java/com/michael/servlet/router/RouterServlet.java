@@ -1,5 +1,6 @@
 package com.michael.servlet.router;
 
+import com.michael.http.HttpStatus;
 import com.michael.servlet.TomcatServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,11 +17,17 @@ public class RouterServlet extends HttpServlet {
 
   @Override
   protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    TomcatServlet servlet =
-        tomcatServlets.stream()
-            .filter(tomcatServlet -> tomcatServlet.getRoute().handle(req, resp))
-            .findFirst()
-            .orElse(null);
+    TomcatServlet servlet;
+    try {
+      servlet =
+          tomcatServlets.stream()
+              .filter(tomcatServlet -> tomcatServlet.getRoute().handle(req, resp))
+              .findFirst()
+              .orElse(null);
+    } catch (Exception e) {
+      resp.sendError(HttpStatus.INTERNAL_SERVER_ERROR.getCode());
+      return;
+    }
 
     // Found the route, return
     if (servlet != null) {
