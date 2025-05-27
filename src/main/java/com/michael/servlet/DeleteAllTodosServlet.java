@@ -20,7 +20,7 @@ public class DeleteAllTodosServlet extends TomcatServlet {
   @Override
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
     try (var connection = database.dataSource().getConnection()) {
-      connection.prepareStatement("DELETE * FROM todo").execute();
+      connection.prepareStatement("DELETE FROM todo").execute();
       resp.setStatus(HttpStatus.NO_CONTENT.getCode());
     } catch (SQLException e) {
       throw new UncheckedSqlException(e);
