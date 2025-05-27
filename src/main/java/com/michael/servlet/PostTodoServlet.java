@@ -44,7 +44,7 @@ public class PostTodoServlet extends TomcatServlet {
 
     try (var con = database.dataSource().getConnection()) {
       PreparedStatement preparedStatement =
-          con.prepareStatement("INSERT INTO todo (title, completed, \"order\") VALUES (?, ?, ?)");
+          con.prepareStatement("INSERT INTO todo (title, completed, \"order\") VALUES (?, ?, ?) RETURNING *");
       preparedStatement.setString(1, todoRequest.title());
       preparedStatement.setBoolean(2, Optional.ofNullable(todoRequest.completed()).orElse(false));
       preparedStatement.setInt(3, Optional.ofNullable(todoRequest.order()).orElse(0));
