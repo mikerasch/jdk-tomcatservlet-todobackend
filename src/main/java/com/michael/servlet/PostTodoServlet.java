@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -47,11 +48,17 @@ public class PostTodoServlet extends TomcatServlet {
       preparedStatement.setString(1, todoRequest.title());
       preparedStatement.setBoolean(2, Optional.ofNullable(todoRequest.completed()).orElse(false));
       preparedStatement.setInt(3, Optional.ofNullable(todoRequest.order()).orElse(0));
-      TodoEntity entity = new TodoEntity(preparedStatement.executeQuery());
+      ResultSet resultSet = preparedStatement.executeQuery();
+      TodoEntity entity = mapFromResultSet(resultSet);
       ResponseCreator.writeJsonContent(new TodoResponse(entity, req), resp, HttpStatus.CREATED);
     } catch (SQLException e) {
       throw new UncheckedSqlException(e);
     }
+  }
+
+  private TodoEntity mapFromResultSet(ResultSet resultSet) throws SQLException {
+    resultSet.next();
+    return new TodoEntity(resultSet);
   }
 
   @Override
