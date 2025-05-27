@@ -11,53 +11,50 @@ import com.michael.servlet.PatchTodoServlet;
 import com.michael.servlet.PostTodoServlet;
 import com.michael.servlet.TomcatServlet;
 import com.michael.servlet.router.RouterServlet;
+import java.util.Set;
 import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
 
-import java.sql.SQLException;
-import java.util.Set;
-
 public class App {
-    public static void main(String[] args) throws Exception {
-        Database database = new Database();
-        Scripts.init(database);
-        Tomcat tomcat = new Tomcat();
-        tomcat.setPort(8080);
-        tomcat.setBaseDir("temp");
-        Context ctx = tomcat.addContext("", System.getProperty("java.io.tmpdir"));
+  public static void main(String[] args) throws Exception {
+    Database database = new Database();
+    Scripts.init(database);
+    Tomcat tomcat = new Tomcat();
+    tomcat.setPort(8080);
+    tomcat.setBaseDir("temp");
+    Context ctx = tomcat.addContext("", System.getProperty("java.io.tmpdir"));
 
-        addFilters(ctx);
-        addServlets(ctx);
+    addFilters(ctx);
+    addServlets(ctx, database);
 
-        tomcat.start();
-        tomcat.getServer().await();
-    }
+    tomcat.start();
+    tomcat.getServer().await();
+  }
 
-    private static void addServlets(Context ctx) {
-        Set<TomcatServlet> tomcatServlets = Set.of(
-           new DeleteAllTodosServlet(),
-           new DeleteTodoServlet(),
-           new GetAllTodosServlet(),
-           new GetTodoServlet(),
-           new PatchTodoServlet(),
-           new PostTodoServlet()
-        );
-        RouterServlet routerServlet = new RouterServlet(tomcatServlets);
-        Tomcat.addServlet(ctx, "routerServlet", routerServlet);
-    }
+  private static void addServlets(Context ctx, Database database) {
+    Set<TomcatServlet> tomcatServlets =
+        Set.of(
+            new DeleteAllTodosServlet(database),
+            new DeleteTodoServlet(database),
+            new GetAllTodosServlet(database),
+            new GetTodoServlet(database),
+            new PatchTodoServlet(database),
+            new PostTodoServlet(database));
+    RouterServlet routerServlet = new RouterServlet(tomcatServlets);
+    Tomcat.addServlet(ctx, "routerServlet", routerServlet);
+  }
 
-    private static void addFilters(Context ctx) {
-        FilterDef filterDef = new FilterDef();
-        filterDef.setFilterName("cors");
-        filterDef.setFilterClass(CorsFilter.class.getName());
-        ctx.addFilterDef(filterDef);
+  private static void addFilters(Context ctx) {
+    FilterDef filterDef = new FilterDef();
+    filterDef.setFilterName("cors");
+    filterDef.setFilterClass(CorsFilter.class.getName());
+    ctx.addFilterDef(filterDef);
 
-        FilterMap filterMap = new FilterMap();
-        filterMap.setFilterName("cors");
-        filterMap.addURLPattern("/*");
-        ctx.addFilterMap(filterMap);
-    }
+    FilterMap filterMap = new FilterMap();
+    filterMap.setFilterName("cors");
+    filterMap.addURLPattern("/*");
+    ctx.addFilterMap(filterMap);
+  }
 }
