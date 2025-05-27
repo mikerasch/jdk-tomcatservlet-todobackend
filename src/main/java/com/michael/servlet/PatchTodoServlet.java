@@ -84,6 +84,6 @@ public class PatchTodoServlet extends TomcatServlet {
 
   @Override
   public Route getRoute() {
-    return new Route(HttpMethod.PATCH, Pattern.compile("^\\\\d+$"), this::doPatch);
+    return new Route(HttpMethod.PATCH, Pattern.compile("^/\\d+$"), this::doPatch);
   }
 }

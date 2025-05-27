@@ -44,6 +44,6 @@ public class DeleteTodoServlet extends TomcatServlet {
 
   @Override
   public Route getRoute() {
-    return new Route(HttpMethod.DELETE, Pattern.compile("^\\\\d+$"), this::doDelete);
+    return new Route(HttpMethod.DELETE, Pattern.compile("^/\\d+$"), this::doDelete);
   }
 }

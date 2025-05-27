@@ -55,6 +55,6 @@ public class GetTodoServlet extends TomcatServlet {
 
   @Override
   public Route getRoute() {
-    return new Route(HttpMethod.GET, Pattern.compile("^\\\\d+$"), this::doGet);
+    return new Route(HttpMethod.GET, Pattern.compile("^/\\d+$"), this::doGet);
   }
 }

@@ -23,9 +23,9 @@ public class App {
     Scripts.init(database);
     Tomcat tomcat = new Tomcat();
     tomcat.setPort(8080);
-    tomcat.setBaseDir("temp");
+    tomcat.setBaseDir(System.getProperty("java.io.tmpdir"));
+    tomcat.getConnector();
     Context ctx = tomcat.addContext("", System.getProperty("java.io.tmpdir"));
-
     addFilters(ctx);
     addServlets(ctx, database);
 
@@ -44,6 +44,7 @@ public class App {
             new PostTodoServlet(database));
     RouterServlet routerServlet = new RouterServlet(tomcatServlets);
     Tomcat.addServlet(ctx, "routerServlet", routerServlet);
+    ctx.addServletMappingDecoded("/*", "routerServlet");
   }
 
   private static void addFilters(Context ctx) {
